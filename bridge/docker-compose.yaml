@@ -18,7 +18,7 @@ services:
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
       KAFKA_NUM_PARTITIONS: 3
     networks:
-      kafka-network:
+      dev-env-network:
         ipv4_address: 172.16.99.4
   mysql:
     image: mysql:8.0
@@ -31,14 +31,14 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=123456
     networks:
-      kafka-network:
+      dev-env-network:
         ipv4_address: 172.16.99.2
   redis:
     image: redis:6.0
     restart: always
     container_name: redis
     networks:
-      kafka-network:
+      dev-env-network:
         ipv4_address: 172.16.99.3
   kafka-ui:
     container_name: kafka-ui
@@ -48,7 +48,7 @@ services:
     #    volumes:
     #      - ~/kui/config.yml:/etc/kafkaui/dynamic_config.yaml
     networks:
-      kafka-network:
+      dev-env-network:
         ipv4_address: 172.16.99.6
   nacos:
     image: nacos/nacos-server:latest
@@ -69,7 +69,7 @@ services:
     volumes:
       - ./nacos-logs/:/home/nacos/logs
     networks:
-      kafka-network:
+      dev-env-network:
         ipv4_address: 172.16.99.7
     restart: always
   portainer:
@@ -80,7 +80,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     restart: always
     networks:
-      kafka-network:
+      dev-env-network:
         ipv4_address: 172.16.99.5
 #  clickhouse:
 #    image: clickhouse
@@ -93,11 +93,12 @@ services:
 #    environment:
 #      CLICKHOUSE_PASSWORD: 123456
 #    networks:
-#      kafka-network:
+#      dev-env-network:
 #        ipv4_address: 172.16.99.8
 
 networks:
-  kafka-network:
+  dev-env-network:
+#    external: true
     ipam:
       driver: default
       config:
