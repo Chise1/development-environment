@@ -1,0 +1,104 @@
+version: '3'
+
+services:
+  kafka:
+    image: apache/kafka-native:latest
+    container_name: kafka
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://172.16.99.4:9092
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@172.16.99.4:9093
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_NUM_PARTITIONS: 3
+    networks:
+      kafka-network:
+        ipv4_address: 172.16.99.4
+  mysql:
+    image: mysql:8.0
+    restart: always
+    container_name: mysql
+    volumes:
+      - ./mysql-log:/var/log/mysql
+      - ./mysql-data:/var/lib/mysql
+      - ./mysql.cnf:/etc/my.cnf
+    environment:
+      - MYSQL_ROOT_PASSWORD=123456
+    networks:
+      kafka-network:
+        ipv4_address: 172.16.99.2
+  redis:
+    image: redis:6.0
+    restart: always
+    container_name: redis
+    networks:
+      kafka-network:
+        ipv4_address: 172.16.99.3
+  kafka-ui:
+    container_name: kafka-ui
+    image: provectuslabs/kafka-ui:latest
+    environment:
+      DYNAMIC_CONFIG_ENABLED: 'true'
+    #    volumes:
+    #      - ~/kui/config.yml:/etc/kafkaui/dynamic_config.yaml
+    networks:
+      kafka-network:
+        ipv4_address: 172.16.99.6
+  nacos:
+    image: nacos/nacos-server:latest
+    container_name: nacos
+    environment:
+      - MODE=standalone
+      - NACOS_AUTH_ENABLE=true
+      - PREFER_HOST_MODE=hostname
+      - SPRING_DATASOURCE_PLATFORM=mysql
+      - MYSQL_SERVICE_HOST=mysql
+      - MYSQL_SERVICE_DB_NAME=nacos
+      - MYSQL_SERVICE_USER=root
+      - MYSQL_SERVICE_PASSWORD=123456
+      - MYSQL_SERVICE_DB_PARAM=characterEncoding=utf8&connectTimeout=1000&socketTimeout=3000&autoReconnect=true&useUnicode=true&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+      - NACOS_AUTH_IDENTITY_KEY=serverIdentity
+      - NACOS_AUTH_IDENTITY_VALUE=security
+      - NACOS_AUTH_TOKEN=SecretKey012345678901234567890123456789012345678901234567890123456789
+    volumes:
+      - ./nacos-logs/:/home/nacos/logs
+    networks:
+      kafka-network:
+        ipv4_address: 172.16.99.7
+    restart: always
+  portainer:
+    container_name: portainer
+    image: portainer/portainer-ce:lts
+    volumes:
+      - ./portainer_data:/data
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: always
+    networks:
+      kafka-network:
+        ipv4_address: 172.16.99.5
+#  clickhouse:
+#    image: clickhouse
+#    container_name: clickhouse
+#    restart: always
+#    ulimits:
+#      nofile:
+#        soft: 262144
+#        hard: 262144
+#    environment:
+#      CLICKHOUSE_PASSWORD: 123456
+#    networks:
+#      kafka-network:
+#        ipv4_address: 172.16.99.8
+
+networks:
+  kafka-network:
+    ipam:
+      driver: default
+      config:
+        - subnet: "172.16.99.0/24"
