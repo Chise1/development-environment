@@ -2,6 +2,7 @@ version: '3'
 
 services:
   kafka:
+    restart: always
     image: apache/kafka-native:latest
     container_name: kafka
     environment:
@@ -71,7 +72,7 @@ services:
     networks:
       dev-env-network:
         ipv4_address: 172.16.99.7
-    restart: always
+#    restart: always
   portainer:
     container_name: portainer
     image: portainer/portainer-ce:lts
