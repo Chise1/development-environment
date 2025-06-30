@@ -1,0 +1,1 @@
+{"addr":"0.0.0.0:8888","socks":[{"addr":"easyconnect:1080","network":"tcp","include":[{"type":"cidr","value":"192.168.0.0/16"}],"exclude":[{"type":"cidr","value":"172.0.0.0/8"}]},{"addr":"v2raya:20170","network":"tcp","include":[{"type":"regexp","value":"google.com"},{"type":"regexp","value":"docker.io"}],"exclude":[{"type":"cidr","value":"172.0.0.0/8"}]}]}

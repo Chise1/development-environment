@@ -16,3 +16,5 @@ services:
       - ES_JAVA_OPTS=-Xms512m -Xmx512m
       - ELASTIC_PASSWORD=Zyyc0913
       - xpack.security.enabled=false
+    ports:
+      - 9200:9200

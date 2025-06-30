@@ -2,6 +2,7 @@ version: '3.7'
 services:
   easyconnect:
     image: hagb/docker-easyconnect:7.6.7 # latest, vncless, 7.6.3, vncless-7.6.3, 7.6.7, vncless-7.6.7
+    container_name: easyconnect
     devices:
       - /dev/net/tun
     cap_add:
@@ -9,7 +10,7 @@ services:
     dns:
       - 223.5.5.5
     volumes:
-      - $HOME/.ecdata:/root
+      - ./.ecdata:/root/
     environment:
       - PING_ADDR_URL=http://192.168.130.113/dashboard/groups
       - PING_ADDR=www.baidu.com
@@ -24,19 +25,26 @@ services:
     networks:
       dev-env-network:
         ipv4_address: 172.16.100.2
-#  v2raya:
-#    image: mzz2017/v2raya
-#    ports:
-#      - 2017:2017
-#      - 20170-20172:20170-20172
-#    restart: always
-#    container_name: v2raya
-#    environment:
-#      - V2RAYA_V2RAY_BIN=/usr/local/bin/v2ray
-#      - V2RAYA_LOG_FILE=/tmp/v2raya.log
-#    volumes:
-#      - ./v2raya:/etc/v2raya
-
+  v2raya:
+    image: mzz2017/v2raya
+    restart: always
+    container_name: v2raya
+    environment:
+      - V2RAYA_V2RAY_BIN=/usr/local/bin/v2ray
+      - V2RAYA_LOG_FILE=/tmp/v2raya.log
+    volumes:
+      - ./v2raya:/etc/v2raya
+    networks:
+      dev-env-network:
+        ipv4_address: 172.16.100.3
+  go-socks5:
+    restart: always
+    image: chise123/go-socks5:v0.1.0
+    volumes:
+      - ./go-socks5/config.json:/go-socks5/conf/config.json
+    networks:
+      dev-env-network:
+        ipv4_address: 172.16.100.4
 networks:
   dev-env-network:
     ipam:
