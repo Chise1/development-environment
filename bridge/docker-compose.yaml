@@ -21,13 +21,15 @@ services:
     networks:
       dev-env-network:
         ipv4_address: 172.16.99.4
+    volumes:
+      - /data/bridge/kafka/data:/bitnami/kafka
   mysql:
     image: mysql:8.0
     restart: always
     container_name: mysql
     volumes:
-      - ./mysql-log:/var/log/mysql
-      - ./mysql-data:/var/lib/mysql
+      - /data/bridge/mysql/log:/var/log/mysql
+      - /data/bridge/mysql/data:/var/lib/mysql
       - ./mysql.cnf:/etc/my.cnf
     environment:
       - MYSQL_ROOT_PASSWORD=123456
@@ -68,7 +70,7 @@ services:
       - NACOS_AUTH_IDENTITY_VALUE=security
       - NACOS_AUTH_TOKEN=SecretKey012345678901234567890123456789012345678901234567890123456789
     volumes:
-      - ./nacos-logs/:/home/nacos/logs
+      - /data/bridge/nacos/logs/:/home/nacos/logs
     networks:
       dev-env-network:
         ipv4_address: 172.16.99.7
@@ -77,7 +79,7 @@ services:
     container_name: portainer
     image: portainer/portainer-ce:lts
     volumes:
-      - ./portainer_data:/data
+      - /data/bridge/portainer/data:/data
       - /var/run/docker.sock:/var/run/docker.sock
     restart: always
     networks:
@@ -96,7 +98,25 @@ services:
 #    networks:
 #      dev-env-network:
 #        ipv4_address: 172.16.99.8
-
+#  es:
+#    image: elasticsearch:8.6.0
+#    restart: always
+#    container_name: es
+#    privileged: true
+#    volumes:
+#      #      - ./elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+#      - /data/bridge/es/logs:/usr/share/elasticsearch/logs
+#      - /data/bridge/es/data:/usr/share/elasticsearch/data
+#    #    volumes:
+#    #      - ./data:/usr/share/elasticsearch/data
+#    environment:
+#      - discovery.type=single-node
+#      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+#      - ELASTIC_PASSWORD=Zyyc0913
+#      - xpack.security.enabled=false
+#    networks:
+#      dev-env-network:
+#        ipv4_address: 172.16.99.9
 networks:
   dev-env-network:
 #    external: true

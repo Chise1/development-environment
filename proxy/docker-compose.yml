@@ -10,7 +10,7 @@ services:
     dns:
       - 223.5.5.5
     volumes:
-      - ./.ecdata:/root/
+      - /data/proxy/.ecdata:/root/
     environment:
       - PING_ADDR_URL=http://192.168.130.113/dashboard/groups
       - PING_ADDR=www.baidu.com
@@ -33,7 +33,7 @@ services:
       - V2RAYA_V2RAY_BIN=/usr/local/bin/v2ray
       - V2RAYA_LOG_FILE=/tmp/v2raya.log
     volumes:
-      - ./v2raya:/etc/v2raya
+      - /data/proxy/v2raya:/etc/v2raya
     networks:
       dev-env-network:
         ipv4_address: 172.16.100.3
