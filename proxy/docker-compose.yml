@@ -42,6 +42,7 @@ services:
     image: chise123/go-socks5:v0.1.0
     volumes:
       - ./go-socks5/config.json:/go-socks5/conf/config.json
+      - /etc/resolv.conf:/etc/resolv.conf # 解决DNS解析问题
     networks:
       dev-env-network:
         ipv4_address: 172.16.100.4
