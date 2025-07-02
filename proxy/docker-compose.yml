@@ -35,7 +35,7 @@ services:
         ipv4_address: 172.16.100.3
   go-socks5:
     restart: always
-    image: chise123/go-socks5:v0.1.0
+    image: chise123/go-socks5:v0.1.1
     volumes:
       - ./go-socks5/config.json:/go-socks5/conf/config.json
       - /etc/resolv.conf:/etc/resolv.conf # 解决DNS解析问题，这里会导致无法通过服务名访问其他几个服务，所以必须使用ip而不是服务名
