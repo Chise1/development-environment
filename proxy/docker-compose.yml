@@ -17,10 +17,6 @@ services:
       - PING_INTERVAL=60
       - URLWIN=1
       - PASSWORD=xxxx
-#    ports:
-#      - 5901:5901
-#      - 1088:1080
-#      - 8888:8888
     restart: always
     networks:
       dev-env-network:
@@ -42,7 +38,12 @@ services:
     image: chise123/go-socks5:v0.1.0
     volumes:
       - ./go-socks5/config.json:/go-socks5/conf/config.json
-      - /etc/resolv.conf:/etc/resolv.conf # 解决DNS解析问题
+      - /etc/resolv.conf:/etc/resolv.conf # 解决DNS解析问题，这里会导致无法通过服务名访问其他几个服务，所以必须使用ip而不是服务名
+      - /etc/hosts:/etc/hosts
+    depends_on:
+      - easyconnect
+      - v2raya
+    container_name: go-socks5
     networks:
       dev-env-network:
         ipv4_address: 172.16.100.4
