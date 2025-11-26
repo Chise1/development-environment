@@ -36,17 +36,43 @@ services:
   go-socks5:
     restart: always
     image: chise123/go-socks5:v0.1.1
+#    ports:
+#      - "9999:8080"
+#      - "9998:8888"
     volumes:
       - ./go-socks5/config.json:/go-socks5/conf/config.json
       - /etc/resolv.conf:/etc/resolv.conf # 解决DNS解析问题，这里会导致无法通过服务名访问其他几个服务，所以必须使用ip而不是服务名
       - /etc/hosts:/etc/hosts
-    depends_on:
-      - easyconnect
-      - v2raya
     container_name: go-socks5
     networks:
       dev-env-network:
         ipv4_address: 172.16.100.4
+
+#  windows:
+#    image: dockurr/windows
+#    container_name: windows7
+#    environment:
+#      VERSION: "7u"
+#    devices:
+#      - /dev/kvm
+#      - /dev/net/tun
+#    cap_add:
+#      - NET_ADMIN
+##    ports:
+##      - 8006:8006
+##      - 3389:3389/tcp
+##      - 3389:3389/udp
+##      - 8888:8888
+##      - 8080:8080
+#    volumes:
+#      - ./windows:/storage
+#      - ./example:/data
+#    restart: always
+#    stop_grace_period: 2m
+#    networks:
+#      dev-env-network:
+#        ipv4_address: 172.16.100.5
+
 networks:
   dev-env-network:
     ipam:

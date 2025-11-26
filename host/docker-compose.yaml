@@ -2,6 +2,7 @@ version: '3'
 
 services:
   kafka:
+    restart: always
     image: apache/kafka-native:latest
     container_name: kafka
     ports:
@@ -61,21 +62,36 @@ services:
       - MODE=standalone
       - NACOS_AUTH_ENABLE=true
       - PREFER_HOST_MODE=hostname
-      - SPRING_DATASOURCE_PLATFORM=mysql
-      - MYSQL_SERVICE_HOST=mysql
-      - MYSQL_SERVICE_DB_NAME=nacos
-      - MYSQL_SERVICE_USER=root
-      - MYSQL_SERVICE_PASSWORD=123456
-      - MYSQL_SERVICE_DB_PARAM=characterEncoding=utf8&connectTimeout=1000&socketTimeout=3000&autoReconnect=true&useUnicode=true&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+      #      - SPRING_DATASOURCE_PLATFORM=mysql
+      #      - MYSQL_SERVICE_HOST=mysql
+      #      - MYSQL_SERVICE_DB_NAME=nacos
+      #      - MYSQL_SERVICE_USER=root
+      #      - MYSQL_SERVICE_PASSWORD=123456
+      #      - MYSQL_SERVICE_DB_PARAM=characterEncoding=utf8&connectTimeout=1000&socketTimeout=3000&autoReconnect=true&useUnicode=true&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
       - NACOS_AUTH_IDENTITY_KEY=serverIdentity
       - NACOS_AUTH_IDENTITY_VALUE=security
       - NACOS_AUTH_TOKEN=SecretKey012345678901234567890123456789012345678901234567890123456789
     volumes:
       - ./nacos-logs/:/home/nacos/logs
-  portainer:
-    container_name: portainer
-    image: portainer/portainer-ce:lts
+      - ./nacos-data:/home/nacos/data
+
+  clickhouse:
+    image: clickhouse/clickhouse-server
+    container_name: clickhouse-server
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
+    ports:
+      - 8123:8123
+      - 9000:9000
     volumes:
-      - ./portainer_data:/data
-      - /var/run/docker.sock:/var/run/docker.sock
-    restart: always
+      - ./clickhouse/logs:/var/log/clickhouse-server/
+      - ./clickhouse/data:/var/lib/clickhouse/
+      - ./clickhouse.xml:/etc/clickhouse-server/config.xml
+      - ./clickhouse-users.xml:/etc/clickhouse-server/users.xml
+    environment:
+      - CLICKHOUSE_DB=default
+      - CLICKHOUSE_USER=admin
+      - CLICKHOUSE_PASSWORD=123456
+      - CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT=1
