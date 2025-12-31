@@ -21,6 +21,8 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
       KAFKA_NUM_PARTITIONS: 3
+    volumes:
+      - /data/bridge/kafka/data:/bitnami/kafka
   mysql:
     image: mysql:8.0
     restart: always

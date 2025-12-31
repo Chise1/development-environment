@@ -126,23 +126,46 @@ services:
         ipv4_address: 172.16.99.9
 
 
-#  dameng:
-#    image: xuxuclassmate/dameng
-#    container_name: dameng
-#    privileged: true
-#    environment:
-#      - PAGE_SIZE=16
-#      - LD_LIBRARY_PATH=/opt/dmdbms/bin
-#      - INSTANCE_NAME=dm8db
-#    deploy:
-#      resources:
-#        limits:
-#          memory: 2G
-#        reservations:
-#          memory: 1G
-#    networks:
-#      dev-env-network:
-#        ipv4_address: 172.16.99.10
+  #  dameng:
+  #    image: xuxuclassmate/dameng
+  #    container_name: dameng
+  #    privileged: true
+  #    environment:
+  #      - PAGE_SIZE=16
+  #      - LD_LIBRARY_PATH=/opt/dmdbms/bin
+  #      - INSTANCE_NAME=dm8db
+  #    deploy:
+  #      resources:
+  #        limits:
+  #          memory: 2G
+  #        reservations:
+  #          memory: 1G
+  #    networks:
+  #      dev-env-network:
+  #        ipv4_address: 172.16.99.10
+  postgres:
+    image: postgres
+    container_name: postgres
+    #    restart: always
+    # set shared memory limit when using docker compose
+    shm_size: 128mb
+    # or set shared memory limit when deploy via swarm stack
+    #volumes:
+    #  - type: tmpfs
+    #    target: /dev/shm
+    #    tmpfs:
+    #      size: 134217728 # 128*2^20 bytes = 128Mb
+    environment:
+      POSTGRES_USER: root           # 默认管理员用户名
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_MULTIPLE_DATABASES: "true"
+
+    volumes:
+      - ./postgres:/var/lib/postgresql/
+    networks:
+      dev-env-network:
+        ipv4_address: 172.16.99.11
+
 networks:
   dev-env-network:
     #    external: true
