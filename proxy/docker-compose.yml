@@ -1,26 +1,26 @@
 services:
-  easyconnect:
-    image: hagb/docker-easyconnect:7.6.7 # latest, vncless, 7.6.3, vncless-7.6.3, 7.6.7, vncless-7.6.7
-    container_name: easyconnect
-    devices:
-      - /dev/net/tun
-    cap_add:
-      - NET_ADMIN
-    dns:
-      - 223.5.5.5
-    volumes:
-      - /data/proxy/.ecdata:/root/
-      - ./easyconnect/hosts:/etc/hosts
-    environment:
-      - PING_ADDR_URL=http://192.168.130.113/dashboard/groups
-      - PING_ADDR=www.baidu.com
-      - PING_INTERVAL=60
-      - URLWIN=1
-      - PASSWORD=xxxx
-    restart: always
-    networks:
-      dev-env-network:
-        ipv4_address: 172.16.100.2
+#  easyconnect:
+#    image: hagb/docker-easyconnect:7.6.7 # latest, vncless, 7.6.3, vncless-7.6.3, 7.6.7, vncless-7.6.7
+#    container_name: easyconnect
+#    devices:
+#      - /dev/net/tun
+#    cap_add:
+#      - NET_ADMIN
+#    dns:
+#      - 223.5.5.5
+#    volumes:
+#      - /data/proxy/.ecdata:/root/
+#      - ./easyconnect/hosts:/etc/hosts
+#    environment:
+#      - PING_ADDR_URL=http://192.168.130.113/dashboard/groups
+#      - PING_ADDR=www.baidu.com
+#      - PING_INTERVAL=60
+#      - URLWIN=1
+#      - PASSWORD=xxxx
+#    restart: always
+#    networks:
+#      dev-env-network:
+#        ipv4_address: 172.16.100.2
   v2raya:
     image: mzz2017/v2raya
     restart: always
